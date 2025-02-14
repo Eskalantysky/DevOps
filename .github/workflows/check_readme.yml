@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Install markdownlint
+        run: npm install -g markdownlint-cli
       
       - name: Validate README syntax
         run: |
