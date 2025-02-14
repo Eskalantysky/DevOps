@@ -1,5 +1,5 @@
 def hola():
-    print("Hola mundo")
+    print("Hello WORLD")
 
 if __name__=="__main__":
     hola()
