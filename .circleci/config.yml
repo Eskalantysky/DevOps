@@ -5,20 +5,17 @@ executors:
     docker:
       - image: ubuntu:latest
 
-  python-executor:
-    docker:
-      - image: circleci/python:3.9
-
 jobs:
   build:
-    executor: python-executor
+    executor: bash-executor
     steps:
       - checkout
       - run:
           name: Instalar dependencias
           command: |
+            export DEBIAN_FRONTEND=noninteractive
             sudo apt-get update
-            sudo apt-get install -y mailutils
+            apt-get install -y mailutils sendmail
       - run:
           name: Crear script de suma
           command: |
@@ -29,8 +26,14 @@ jobs:
       - run:
           name: Ejecutar Build y enviar notificación si falla
           command: |
-            if ! ./script.sh; then
-              echo "Ejecución fallada en CircleCI" | mail -s "Alerta de Build" anfe-97@hotmail.com
+            if ! ./script_de_build.sh; then
+              {
+                echo "Subject: Fallo en CircleCI"
+                echo "From: no-reply@circleci.com"
+                echo "To: anfe-97@hotmail.com"
+                echo ""
+                echo "El proceso de Build ha fallado en CircleCI."
+              } | sendmail -t
               exit 1
             fi
       - persist_to_workspace:
