@@ -27,9 +27,13 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Instalar bats
+          name: Instalar bats y configurar zona horaria
           command: |
-            apt-get update && apt-get install -y bats
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update
+            apt-get install -y tzdata bats
+            ln -fs /usr/share/zoneinfo/America/Bogota /etc/localtime
+            dpkg-reconfigure --frontend noninteractive tzdata
       - run:
           name: Crear test para validar la suma
           command: |
