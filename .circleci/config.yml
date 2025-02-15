@@ -5,13 +5,6 @@ jobs:
     docker:
       - image: ubuntu:latest
     steps:
-      - checkout
-      - run:
-          name: Set Timezone Automatically
-          command: |
-            echo "tzdata tzdata/Areas select America" | debconf-set-selections
-            echo "tzdata tzdata/Zones/America select Bogota" | debconf-set-selections
-            DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
       - run:
           name: Install Dependencies
           command: |
