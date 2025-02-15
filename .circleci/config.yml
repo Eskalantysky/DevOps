@@ -40,6 +40,7 @@ jobs:
             echo '#!/usr/bin/env bats' > test_script.bats
             echo "@test 'Check sum' {" >> test_script.bats
             echo "  result=\$(bash script.sh)" >> test_script.bats
+            echo "  echo \"\$result\"" >> test_script.bats
             echo "  [ \"\$result\" = 'Sum: 5' ]" >> test_script.bats
             echo "}" >> test_script.bats
       - run:
