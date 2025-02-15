@@ -11,32 +11,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Instalar dependencias
-          command: |
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update
-            apt-get install -y mailutils sendmail msmtp
-      - run:
           name: Crear script de suma
           command: |
             echo '#!/bin/bash' > script.sh
             echo 'suma=$((2 + 4))' >> script.sh
             echo 'echo "$suma"' >> script.sh
             chmod +x script.sh 
-      - run:
-          name: Enviar correo si el build falla
-          command: |
-            if ! ./script.sh; then
-              {
-                echo "Subject: 🚨 Build Fallido en CircleCI"
-                echo "From: anfe-97@hotmail.com"
-                echo "To: anfe-97@hotmail.com"
-                echo ""
-                echo "El proceso de Build ha fallado en CircleCI."
-              } | msmtp -a default anfe-97@hotmail.com
-              exit 1
-            fi
-
       - persist_to_workspace:
           root: .
           paths:
@@ -52,7 +32,7 @@ jobs:
           command: |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update
-            apt-get install -y tzdata bats mailutils sendmail msmtp
+            apt-get install -y tzdata bats
             ln -fs /usr/share/zoneinfo/America/Bogota /etc/localtime
             dpkg-reconfigure --frontend noninteractive tzdata
       - run:
@@ -64,20 +44,6 @@ jobs:
             echo "  echo \"El resultado de bash.sh es: \$result\"" >> test_script.bats 
             echo "  [ \"\$result\" = '5' ]" >> test_script.bats
             echo "}" >> test_script.bats
-      - run:
-          name: Enviar correo si el build falla
-          command: |
-            if ! ./script.sh; then
-              {
-                echo "Subject: 🚨 Build Fallido en CircleCI"
-                echo "From: anfe-97@hotmail.com"
-                echo "To: anfe-97@hotmail.com"
-                echo ""
-                echo "El proceso de Build ha fallado en CircleCI."
-              } | msmtp -a default anfe-97@hotmail.com
-              exit 1
-            fi
-
       - run:
           name: Ejecutar test
           command: bats test_script.bats
