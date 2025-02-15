@@ -30,7 +30,7 @@ jobs:
           name: Ejecutar Build y enviar notificación si falla
           command: |
             if ! ./script_de_build.sh; then
-              echo "Build fallido en CircleCI" | mail -s "Alerta de Build" tu_correo@ejemplo.com
+              echo "Build fallido en CircleCI" | mail -s "Alerta de Build" anfe-97@hotmail.com
               exit 1
             fi
       - persist_to_workspace:
