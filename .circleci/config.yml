@@ -1,16 +1,52 @@
 version: 2.1
 
-jobs:
-  hello_world:
+executors:
+  bash-executor:
     docker:
       - image: ubuntu:latest
+
+jobs:
+  build:
+    executor: bash-executor
     steps:
+      - checkout
       - run:
-          name: Print Hello World
-          command: echo "Hola mundo"
+          name: Crear script de suma
+          command: |
+            echo '#!/bin/bash' > script.sh
+            echo 'echo "Sum: $((2 + 3))"' >> script.sh
+            chmod +x script.sh
+      - persist_to_workspace:
+          root: .
+          paths:
+            - script.sh
+
+  test:
+    executor: bash-executor
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Instalar bats
+          command: |
+            apt-get update && apt-get install -y bats
+      - run:
+          name: Crear test para validar la suma
+          command: |
+            echo '#!/usr/bin/env bats' > test_script.bats
+            echo "@test 'Check sum' {" >> test_script.bats
+            echo "  result=\$(bash script.sh)" >> test_script.bats
+            echo "  [ \"\$result\" = 'Sum: 5' ]" >> test_script.bats
+            echo "}" >> test_script.bats
+      - run:
+          name: Ejecutar test
+          command: bats test_script.bats
 
 workflows:
   version: 2
-  hello_workflow:
+  build_and_test:
     jobs:
-      - hello_world
+      - build
+      - test:
+          requires:
+            - build
