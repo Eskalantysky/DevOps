@@ -23,6 +23,19 @@ jobs:
             echo 'suma=$((2 + 4))' >> script.sh
             echo 'echo "$suma"' >> script.sh
             chmod +x script.sh 
+      - run:
+          name: Ejecutar Build y enviar correo si falla
+          command: |
+            if ! ./script.sh; then
+              {
+                echo "Subject: 🚨 Build Failed in CircleCI"
+                echo "From: no-reply@circleci.com"
+                echo "To: anfe-97@hotmail.com"
+                echo ""
+                echo "El proceso de Build ha fallado en CircleCI."
+              } | sendmail -t
+              exit 1
+            fi
       - persist_to_workspace:
           root: .
           paths:
