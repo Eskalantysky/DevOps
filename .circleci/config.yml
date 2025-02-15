@@ -41,7 +41,7 @@ jobs:
             echo '#!/usr/bin/env bats' > test_script.bats
             echo "@test 'El resultado del test_scrip.bats es 5' {" >> test_script.bats
             echo "  result=\$(bash script.sh)" >> test_script.bats
-            echo "  echo \"Resultado: \$result\"" >> test_script.bats 
+            echo "  echo \"El resultado de bash.sh es: \$result\"" >> test_script.bats 
             echo "  [ \"\$result\" = '5' ]" >> test_script.bats
             echo "}" >> test_script.bats
       - run:
