@@ -15,7 +15,7 @@ jobs:
           command: |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update
-            apt-get install -y mailutils sendmail postfix
+            apt-get install -y mailutils sendmail msmtp
       - run:
           name: Crear script de suma
           command: |
@@ -51,7 +51,7 @@ jobs:
           command: |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update
-            apt-get install -y tzdata bats mailutils sendmail postfix
+            apt-get install -y tzdata bats mailutils sendmail msmtp
             ln -fs /usr/share/zoneinfo/America/Bogota /etc/localtime
             dpkg-reconfigure --frontend noninteractive tzdata
       - run:
