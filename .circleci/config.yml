@@ -13,7 +13,6 @@ jobs:
       - run:
           name: Instalar dependencias
           command: |
-            export DEBIAN_FRONTEND=noninteractive
             sudo apt-get update
             apt-get install -y mailutils sendmail
       - run:
