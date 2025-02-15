@@ -11,30 +11,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Instalar dependencias
-          command: |
-            sudo apt-get update
-            apt-get install -y mailutils sendmail
-      - run:
           name: Crear script de suma
           command: |
             echo '#!/bin/bash' > script.sh
-            echo 'suma=$((2 + 4))' >> script.sh
+            echo 'suma=$((2 + 3))' >> script.sh
             echo 'echo "$suma"' >> script.sh
             chmod +x script.sh 
-      - run:
-          name: Ejecutar Build y enviar notificación si falla
-          command: |
-            if ! ./script.sh; then
-              {
-                echo "Subject: Fallo en CircleCI"
-                echo "From: no-reply@circleci.com"
-                echo "To: anfe-97@hotmail.com"
-                echo ""
-                echo "El proceso de Build ha fallado en CircleCI."
-              } | sendmail -t
-              exit 1
-            fi
       - persist_to_workspace:
           root: .
           paths:
