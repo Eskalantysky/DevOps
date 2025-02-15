@@ -5,11 +5,19 @@ jobs:
     docker:
       - image: ubuntu:latest
     steps:
+      - checkout
+      - run:
+          name: Set Timezone Automatically
+          command: |
+            echo "tzdata tzdata/Areas select America" | debconf-set-selections
+            echo "tzdata tzdata/Zones/America select Bogota" | debconf-set-selections
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update && apt-get install -y tzdata
       - run:
           name: Install Dependencies
           command: |
-            apt-get update && apt-get install -y bash git
-      - checkout
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update && apt-get install -y bash bats git
       - run:
           name: Create Bash Script
           command: |
@@ -33,13 +41,13 @@ jobs:
           command: |
             echo "tzdata tzdata/Areas select America" | debconf-set-selections
             echo "tzdata tzdata/Zones/America select Bogota" | debconf-set-selections
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update && apt-get install -y tzdata
       - run:
           name: Install Dependencies
           command: |
+            export DEBIAN_FRONTEND=noninteractive
             apt-get update && apt-get install -y bash bats git
-      - checkout
-      - attach_workspace:
-          at: .
       - run:
           name: Create and Run Test
           command: |
