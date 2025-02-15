@@ -5,11 +5,11 @@ jobs:
     docker:
       - image: ubuntu:latest
     steps:
-      - checkout
       - run:
           name: Install Dependencies
           command: |
-            apt-get update && apt-get install -y bash
+            apt-get update && apt-get install -y bash git
+      - checkout
       - run:
           name: Create Bash Script
           command: |
@@ -25,13 +25,13 @@ jobs:
     docker:
       - image: ubuntu:latest
     steps:
-      - checkout
-      - attach_workspace:
-          at: .
       - run:
           name: Install Dependencies
           command: |
-            apt-get update && apt-get install -y bash bats
+            apt-get update && apt-get install -y bash bats git
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Create and Run Test
           command: |
