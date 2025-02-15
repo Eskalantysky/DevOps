@@ -14,12 +14,16 @@ jobs:
           name: Crear script de suma
           command: |
             echo '#!/bin/bash' > script.sh
-            echo 'echo "Sum: $((2 + 3))"' >> script.sh
+            echo 'suma=$((2 + 3))' >> script.sh
+            echo 'echo "$suma"' >> script.sh
             chmod +x script.sh
       - persist_to_workspace:
           root: .
           paths:
             - script.sh
+#!/bin/bash
+resultado=$((2+3))
+echo "$resultado"
 
   test:
     executor: bash-executor
@@ -38,7 +42,7 @@ jobs:
           name: Crear test para validar la suma
           command: |
             echo '#!/usr/bin/env bats' > test_script.bats
-            echo "@test 'Check sum' {" >> test_script.bats
+            echo "@test 'El resultado del test_scrip.bats es 5' {" >> test_script.bats
             echo "  result=\$(bash script.sh)" >> test_script.bats
             echo "  echo \"\$result\"" >> test_script.bats
             echo "  [ \"\$result\" = 'Sum: 5' ]" >> test_script.bats
