@@ -11,6 +11,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Instalar dependencias
+          command: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update
+            apt-get install -y mailutils sendmail
+      - run:
           name: Crear script de suma
           command: |
             echo '#!/bin/bash' > script.sh
