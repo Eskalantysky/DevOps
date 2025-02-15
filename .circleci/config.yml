@@ -24,17 +24,19 @@ jobs:
             echo 'echo "$suma"' >> script.sh
             chmod +x script.sh 
       - run:
-          name: Configurar msmtp
+          name: Enviar correo si el build falla
           command: |
-            echo "account default" > ~/.msmtprc
-            echo "host smtp.office365.com" >> ~/.msmtprc  # Para Hotmail/Outlook
-            echo "port 587" >> ~/.msmtprc
-            echo "auth on" >> ~/.msmtprc
-            echo "user anfe-97@hotmail.com" >> ~/.msmtprc
-            echo "password $SMTP_PASSWORD" >> ~/.msmtprc
-            echo "tls on" >> ~/.msmtprc
-            echo "tls_starttls on" >> ~/.msmtprc
-            chmod 600 ~/.msmtprc
+            if ! ./script.sh; then
+              {
+                echo "Subject: 🚨 Build Fallido en CircleCI"
+                echo "From: anfe-97@hotmail.com"
+                echo "To: anfe-97@hotmail.com"
+                echo ""
+                echo "El proceso de Build ha fallado en CircleCI."
+              } | msmtp -a default anfe-97@hotmail.com
+              exit 1
+            fi
+
       - persist_to_workspace:
           root: .
           paths:
@@ -63,17 +65,19 @@ jobs:
             echo "  [ \"\$result\" = '5' ]" >> test_script.bats
             echo "}" >> test_script.bats
       - run:
-          name: Configurar msmtp
+          name: Enviar correo si el build falla
           command: |
-            echo "account default" > ~/.msmtprc
-            echo "host smtp.office365.com" >> ~/.msmtprc  # Para Hotmail/Outlook
-            echo "port 587" >> ~/.msmtprc
-            echo "auth on" >> ~/.msmtprc
-            echo "user anfe-97@hotmail.com" >> ~/.msmtprc
-            echo "password $SMTP_PASSWORD" >> ~/.msmtprc
-            echo "tls on" >> ~/.msmtprc
-            echo "tls_starttls on" >> ~/.msmtprc
-            chmod 600 ~/.msmtprc
+            if ! ./script.sh; then
+              {
+                echo "Subject: 🚨 Build Fallido en CircleCI"
+                echo "From: anfe-97@hotmail.com"
+                echo "To: anfe-97@hotmail.com"
+                echo ""
+                echo "El proceso de Build ha fallado en CircleCI."
+              } | msmtp -a default anfe-97@hotmail.com
+              exit 1
+            fi
+
       - run:
           name: Ejecutar test
           command: bats test_script.bats
