@@ -20,7 +20,7 @@ jobs:
           name: Crear script de suma
           command: |
             echo '#!/bin/bash' > script.sh
-            echo 'suma=$((2 + 3))' >> script.sh
+            echo 'suma=$((2 + 4))' >> script.sh
             echo 'echo "$suma"' >> script.sh
             chmod +x script.sh 
       - run:
@@ -63,6 +63,19 @@ jobs:
             echo "  echo \"El resultado de bash.sh es: \$result\"" >> test_script.bats 
             echo "  [ \"\$result\" = '5' ]" >> test_script.bats
             echo "}" >> test_script.bats
+      - run:
+          name: Ejecutar Build y enviar correo si falla
+          command: |
+            if ! ./script.sh; then
+              {
+                echo "Subject: Ejecución de build ha fallado en CircleCI"
+                echo "From: no-reply@circleci.com"
+                echo "To: anfe-97@hotmail.com"
+                echo ""
+                echo "El proceso de Build ha fallado en CircleCI."
+              } | sendmail -t
+              exit 1
+            fi
       - run:
           name: Ejecutar test
           command: bats test_script.bats
