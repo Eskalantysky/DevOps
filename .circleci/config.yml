@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Ejecutar Build y enviar notificación si falla
           command: |
-            if ! ./script_de_build.sh; then
+            if ! ./script.sh; then
               {
                 echo "Subject: Fallo en CircleCI"
                 echo "From: no-reply@circleci.com"
