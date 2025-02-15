@@ -1,63 +1,16 @@
 version: 2.1
 
 jobs:
-  build:
+  hello_world:
     docker:
       - image: ubuntu:latest
     steps:
-      - checkout
       - run:
-          name: Set Timezone Automatically
-          command: |
-            echo "tzdata tzdata/Areas select America" | debconf-set-selections
-            echo "tzdata tzdata/Zones/America select Bogota" | debconf-set-selections
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update && apt-get install -y tzdata
-      - run:
-          name: Install Dependencies
-          command: |
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update && apt-get install -y bash bats git
-      - run:
-          name: Create Script
-          command: |
-            mkdir -p scripts
-            echo "#!/bin/bash" > scripts/script.sh
-            echo "echo \"Sum: \$((2+3))\"" >> scripts/script.sh
-            chmod +x scripts/script.sh
-      - persist_to_workspace:
-          root: .
-          paths:
-            - scripts
-
-  test:
-    docker:
-      - image: ubuntu:latest
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Install Dependencies
-          command: |
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update && apt-get install -y bash bats git
-      - run:
-          name: Create and Run Test
-          command: |
-            echo "#!/usr/bin/env bats" > test_script.bats
-            echo "@test 'Check sum' {" >> test_script.bats
-            echo "  result=\$(bash scripts/script.sh)" >> test_script.bats
-            echo "  echo \"Result from script: \$result\"" >> test_script.bats
-            echo "  [ \"\$result\" = 'Sum: 5' ]" >> test_script.bats
-            echo "}" >> test_script.bats
-            chmod +x test_script.bats
-            bats test_script.bats
+          name: Print Hello World
+          command: echo "Hola mundo"
 
 workflows:
   version: 2
-  build_and_test:
+  hello_workflow:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - hello_world
